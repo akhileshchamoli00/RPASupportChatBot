@@ -35,7 +35,7 @@ CHROMA_COLLECTION_NAME = os.getenv(
 EXCEL_PATH = os.path.join(os.path.dirname(__file__), "..", "documentation", "test.xlsx")
 
 # ---------------------------------------------------------------------------
-# Clients
+# Clients 12345
 # ---------------------------------------------------------------------------
 openai_client = OpenAI(api_key=OPENAI_API_KEY)
 chroma_client = chromadb.PersistentClient(path=CHROMA_PERSIST_DIR)
