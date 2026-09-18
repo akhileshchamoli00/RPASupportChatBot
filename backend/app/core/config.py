@@ -26,7 +26,7 @@ class Settings:
     # OpenAI Settings (fallback)
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     CHAT_MODEL: str = os.getenv("CHAT_MODEL", "gpt-4o")
-    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-large")
+    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "text-embedding-3-small")
     TOP_K: int = int(os.getenv("TOP_K", "5"))
 
     # PostgreSQL
