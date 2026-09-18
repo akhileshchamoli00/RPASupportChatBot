@@ -11,6 +11,20 @@ from sqlalchemy.orm import relationship
 from app.postgres_database.database import Base
 
 
+class User(Base):
+    """Represents a registered user account."""
+
+    __tablename__ = "users"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    username = Column(String(100), unique=True, index=True, nullable=False)
+    hashed_password = Column(String(255), nullable=False)
+    created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+
+    def __repr__(self):
+        return f"<User(id={self.id}, username={self.username})>"
+
+
 class ChatSession(Base):
     """Represents a single chat conversation."""
 
@@ -24,6 +38,8 @@ class ChatSession(Base):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
     )
+    automation = Column(String(50), nullable=True)
+    user_id = Column(String(100), nullable=True, index=True)
 
     # Relationship: one session has many messages
     messages = relationship(
@@ -47,6 +63,21 @@ class ChatMessage(Base):
     role = Column(String(20), nullable=False)  # "user" or "assistant"
     content = Column(Text, nullable=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    prompt_tokens = Column(Integer, nullable=True, default=0)
+    completion_tokens = Column(Integer, nullable=True, default=0)
+    total_tokens = Column(Integer, nullable=True, default=0)
+    model_used = Column(String(100), nullable=True)
+    sources_json = Column(Text, nullable=True)
+
+    @property
+    def sources(self):
+        if self.sources_json:
+            try:
+                import json
+                return json.loads(self.sources_json)
+            except Exception:
+                return []
+        return None
 
     # Relationship back to session
     session = relationship("ChatSession", back_populates="messages")
